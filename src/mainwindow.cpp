@@ -621,6 +621,7 @@ void MainWindow::enableRcs(bool bEnable) {
 		connect(rcs.get(), &RemoteControlSocket::filename, this, &MainWindow::rcsUpdateFilename);
 		connect(rcs.get(), &RemoteControlSocket::select_all, this, &MainWindow::selectAllStreams);
 		connect(rcs.get(), &RemoteControlSocket::select_none, this, &MainWindow::selectNoStreams);
+        connect(rcs.get(), &RemoteControlSocket::select, this, &MainWindow::rcsSelectStream);
 	}
 	bool oldState = ui->rcsCheckBox->blockSignals(true);
 	ui->rcsCheckBox->setChecked(bEnable);
@@ -640,6 +641,17 @@ void MainWindow::rcsStartRecording() {
 	hideWarnings = true;
 	selectAllStreams();
 	startRecording();
+}
+
+void MainWindow::rcsSelectStream(QString s) {
+    for( int i = 0; i < ui->streamList->count(); ++i ) {
+        qInfo() << s;
+        qInfo() <<ui->streamList->item(i)->text();
+        if(  ui->streamList->item(i)->text().contains(s) ) {
+            ui->streamList->item(i)->setCheckState(Qt::Checked);
+            break;
+        }
+    }
 }
 
 void MainWindow::rcsUpdateFilename(QString s) {

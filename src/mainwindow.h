@@ -79,6 +79,7 @@ private slots:
 	void rcsCheckBoxChanged(bool checked);
 	void rcsUpdateFilename(QString s);
 	void rcsStartRecording();
+    void rcsSelectStream(QString s);
 	void rcsportValueChangedInt(int value);
 
 

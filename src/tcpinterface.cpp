@@ -34,6 +34,12 @@ void RemoteControlSocket::handleLine(QString s, QTcpSocket *sock) {
             emit select_all();
         } else if (s.contains("none")) {
             emit select_none();
+        } else {
+            QString names = s.remove("select");
+            QStringList matches = names.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+            for( QString match : matches ) {
+                emit select(match);
+            }
         }
         sock->write("OK");
     } else if (s == "list") {
