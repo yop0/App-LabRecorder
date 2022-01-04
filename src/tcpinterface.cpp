@@ -17,32 +17,35 @@ void RemoteControlSocket::addClient() {
 
 void RemoteControlSocket::handleLine(QString s, QTcpSocket *sock) {
     qInfo() << s;
-    if (s == "start") {
+    QStringList matches = s.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+    QString command = matches[0];
+    matches.pop_front();
+    QString args = s.remove(command);
+
+    if (command == "start") {
         emit start();
         sock->write("OK");
-    } else if (s == "stop") {
+    } else if (command == "stop") {
         emit stop();
         sock->write("OK");
-    } else if (s == "update") {
+    } else if (command == "update") {
         emit refresh_streams();
         sock->write("OK");
-    } else if (s.contains("filename")) {
-        emit filename(s);
+    } else if (command == "filename") {
+        emit filename(args);
         sock->write("OK");
-    } else if (s.contains("select")) {
-        if (s.contains("all")) {
+    } else if (command == "select") {
+        if (matches[0] == "all" and matches.length() == 0) {
             emit select_all();
-        } else if (s.contains("none")) {
+        } else if (matches[0] == "none" and matches.length() == 0) {
             emit select_none();
         } else {
-            QString names = s.remove("select");
-            QStringList matches = names.split(QRegExp("\\s+"), QString::SkipEmptyParts);
             for( QString match : matches ) {
                 emit select(match);
             }
         }
         sock->write("OK");
-    } else if (s == "list") {
+    } else if (command == "list") {
         sock->write(_win->getKnownStreams().toJsonString().c_str());
     }
     // TODO: select /deselect streams

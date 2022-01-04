@@ -645,8 +645,6 @@ void MainWindow::rcsStartRecording() {
 
 void MainWindow::rcsSelectStream(QString s) {
     for( int i = 0; i < ui->streamList->count(); ++i ) {
-        qInfo() << s;
-        qInfo() <<ui->streamList->item(i)->text();
         if(  ui->streamList->item(i)->text().contains(s) ) {
             ui->streamList->item(i)->setCheckState(Qt::Checked);
             break;
