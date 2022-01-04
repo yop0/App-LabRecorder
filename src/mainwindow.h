@@ -30,9 +30,27 @@ public:
 	std::string type;
 	std::string id;
 	std::string host;
+    std::string toJsonString() const {
+        return std::string(R"({"name":")" + name +R"(","type":")" + type + R"(","id":")" + id + R"(","host":")" + host + "\"}");
+    }
 	bool checked;
 };
 
+
+class StreamList: public QList<StreamItem> {
+public:
+    std::string toJsonString() const {
+        std::string json("[");
+        for(int i = 0; i < this->length(); ++i) {
+            json.append(this->at(i).toJsonString());
+            if(i < this->length() - 1) {
+                json.append(",");
+            }
+        }
+        json.append("]");
+        return json;
+    }
+};
 
 class MainWindow : public QMainWindow {
 	Q_OBJECT
@@ -40,6 +58,10 @@ class MainWindow : public QMainWindow {
 public:
 	explicit MainWindow(QWidget *parent, const char *config_file);
 	~MainWindow() noexcept override;
+
+    StreamList getKnownStreams() {
+        return knownStreams;
+    }
 
 private slots:
 	void statusUpdate(void) const;
@@ -59,6 +81,7 @@ private slots:
 	void rcsStartRecording();
 	void rcsportValueChangedInt(int value);
 
+
 private:
 	QString replaceFilename(QString fullfile) const;
 	// function for loading / saving the config file
@@ -73,7 +96,7 @@ private:
 	int startTime;
 	std::unique_ptr<QTimer> timer;
 
-	QList<StreamItem> knownStreams;
+    StreamList knownStreams;
 	QSet<QString> missingStreams;
 	std::map<std::string, int> syncOptionsByStreamName;
 

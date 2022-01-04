@@ -613,7 +613,7 @@ void MainWindow::enableRcs(bool bEnable) {
         }
 	} else if (bEnable) {
 		uint16_t port = ui->rcsport->value();
-		rcs = std::make_unique<RemoteControlSocket>(port);
+		rcs = std::make_unique<RemoteControlSocket>(port, this);
 		// TODO: Add some method to RemoteControlSocket to report if its server is listening (i.e. was successful).
 		connect(rcs.get(), &RemoteControlSocket::refresh_streams, this, &MainWindow::refreshStreams);
 		connect(rcs.get(), &RemoteControlSocket::start, this, &MainWindow::rcsStartRecording);
