@@ -27,6 +27,7 @@ signals:
 	void select_all();
 	void select_none();
     void select(QString s);
+    void deselect(QString s);
 
 public slots:
 	void addClient();

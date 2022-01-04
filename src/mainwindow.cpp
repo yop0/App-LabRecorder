@@ -622,6 +622,7 @@ void MainWindow::enableRcs(bool bEnable) {
 		connect(rcs.get(), &RemoteControlSocket::select_all, this, &MainWindow::selectAllStreams);
 		connect(rcs.get(), &RemoteControlSocket::select_none, this, &MainWindow::selectNoStreams);
         connect(rcs.get(), &RemoteControlSocket::select, this, &MainWindow::rcsSelectStream);
+        connect(rcs.get(), &RemoteControlSocket::deselect, this, &MainWindow::rcsDeselectStream);
 	}
 	bool oldState = ui->rcsCheckBox->blockSignals(true);
 	ui->rcsCheckBox->setChecked(bEnable);
@@ -647,6 +648,15 @@ void MainWindow::rcsSelectStream(QString s) {
     for( int i = 0; i < ui->streamList->count(); ++i ) {
         if(  ui->streamList->item(i)->text().contains(s) ) {
             ui->streamList->item(i)->setCheckState(Qt::Checked);
+            break;
+        }
+    }
+}
+
+void MainWindow::rcsDeselectStream(QString s) {
+    for( int i = 0; i < ui->streamList->count(); ++i ) {
+        if(  ui->streamList->item(i)->text().contains(s) ) {
+            ui->streamList->item(i)->setCheckState(Qt::Unchecked);
             break;
         }
     }

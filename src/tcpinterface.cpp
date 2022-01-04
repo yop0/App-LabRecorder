@@ -35,10 +35,16 @@ void RemoteControlSocket::handleLine(QString s, QTcpSocket *sock) {
         emit filename(args);
         sock->write("OK");
     } else if (command == "select") {
-        if (matches[0] == "all" and matches.length() == 0) {
-            emit select_all();
+        if (matches[0] == "all") {
+            if (matches.length() > 1)
+                qInfo() << "Cannot parse command!";
+            else
+                emit select_all();
         } else if (matches[0] == "none" and matches.length() == 0) {
-            emit select_none();
+            if (matches.length() > 1)
+                qInfo() << "Cannot parse command!";
+            else
+                emit select_none();
         } else {
             for( QString match : matches ) {
                 emit select(match);
@@ -47,7 +53,19 @@ void RemoteControlSocket::handleLine(QString s, QTcpSocket *sock) {
         sock->write("OK");
     } else if (command == "list") {
         sock->write(_win->getKnownStreams().toJsonString().c_str());
+    } else if ( command == "deselect" ) {
+        if (matches[0] == "all") {
+            if (matches.length() > 1)
+                qInfo() << "Cannot parse command!";
+            else
+                emit select_none();
+        } else {
+            for (QString match: matches) {
+                emit deselect(match);
+            }
+        }
     }
+
     // TODO: select /deselect streams
 	// TODO: send acknowledgement
 	// TODO: get current state

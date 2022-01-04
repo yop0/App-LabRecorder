@@ -80,7 +80,8 @@ private slots:
 	void rcsUpdateFilename(QString s);
 	void rcsStartRecording();
     void rcsSelectStream(QString s);
-	void rcsportValueChangedInt(int value);
+    void rcsDeselectStream(QString s);
+    void rcsportValueChangedInt(int value);
 
 
 private:
